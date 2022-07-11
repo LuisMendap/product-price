@@ -9,6 +9,9 @@ import { getDefaultSeller } from './modules/seller'
 import { hideProductPrice } from './modules/hideProductPrice'
 
 const CSS_HANDLES = [
+  'giftCardPriceContainer',
+  'giftCardMinPriceContainer',
+  'giftCardMaxPriceContainer',
   'sellingPrice',
   'sellingPriceValue',
   'sellingPriceWithTax',
@@ -55,6 +58,11 @@ function SellingPrice({
 
   const commercialOffer = seller?.commertialOffer
 
+  // Giftcards
+  const isAGiftcard = productContextValue?.product?.categories.some(categoryTree => categoryTree.includes('GiftCard'))
+  const minValue = productContextValue?.product?.priceRange?.listPrice?.lowPrice
+  const maxValue =  productContextValue?.product?.priceRange?.listPrice?.highPrice
+
   if (
     !commercialOffer ||
     hideProductPrice({
@@ -91,6 +99,11 @@ function SellingPrice({
   ])
 
   return (
+    isAGiftcard ?
+    <div className={handles.giftCardPriceContainer}>
+      <span className={handles.giftCardMinPriceContainer}><FormattedCurrency value={minValue||0} /></span> A <span className={handles.giftCardMaxPriceContainer}><FormattedCurrency value={maxValue||0} /></span>
+    </div>
+    :
     <span className={containerClasses}>
       <IOMessageWithMarkers
         message={message}
